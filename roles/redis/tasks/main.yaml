@@ -1,0 +1,38 @@
+---
+
+- name: Test if distribution is RedHat
+  assert:
+    that: ansible_os_family == "RedHat" and
+          ansible_distribution_major_version | int <= 6
+
+- name: Install EPEL repo
+  yum:
+    name: epel-release
+
+- name: Install Redis
+  yum:
+    name: redis
+  notify:
+    - Restart Redis
+  tags:
+    - redis_pkg
+
+- name: Configure Redis
+  template:
+    src: redis.conf.j2
+    dest: /etc/redis.conf
+  notify:
+    - Restart Redis
+  tags:
+    - redis_config
+
+- name: Copy sysconfig file
+  copy:
+    src: redis_sysconfig
+    dest: /etc/sysconfig/redis
+
+- name: Enable and start Redis
+  service:
+    name: redis
+    state: started
+    enabled: true

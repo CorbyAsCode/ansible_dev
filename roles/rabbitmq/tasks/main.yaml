@@ -1,0 +1,106 @@
+---
+
+- name: Test if distribution is RedHat
+  assert:
+    that: >
+      ansible_os_family == "RedHat" and
+      ansible_distribution_major_version | int >= 6
+
+#- name: Install erlang repo
+  #yum:
+    #name: http://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm
+  #tags:
+    #- rabbitmq_repo
+
+- name: Install Rabbitmq RPM key
+  rpm_key: 
+    state: present
+    key: http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+
+- name: Install rabbitmq-server
+  yum:
+    name: "{{ rabbitmq_pkg }}"
+  notify:
+    - Restart rabbitmq-server
+  tags:
+    - rabbitmq_pkg
+
+- name: Create RabbitMQ config dir
+  file: 
+    path: /etc/rabbitmq
+    state: directory
+    mode: 0755
+
+- name: Setup RabbitMQ config
+  template:
+    src: rabbitmq.conf.j2
+    dest: /etc/rabbitmq/rabbitmq.config
+  notify:
+    - Restart rabbitmq-server
+  tags:
+    - rabbitmq_config
+
+- name: Make sure rabbitmq-server is enabled and running
+  service:
+    name: rabbitmq-server
+    state: started
+    enabled: true
+
+- name: Create sbin symlink to find executables
+  file:
+    src: /usr/lib/rabbitmq/bin
+    dest: /usr/lib/rabbitmq/sbin
+    state: link
+
+- name: Manage RabbitMQ vhosts
+  rabbitmq_vhost:
+    name: "{{ item.name }}"
+    node: "{{ item.node | default('rabbit') }}"
+    state: "{{ item.state | default('present') }}"
+    tracing: "{{ item.tracing | default('no') }}"
+  with_items: rabbitmq_vhosts
+
+- name: Manage RabbitMQ users
+  rabbitmq_user:
+    user: "{{ item.user }}"
+    password: "{{ item.user | default('') }}"
+    vhost: "{{ item.vhost | default('/') }}"
+    tags: "{{ item.tags | default([]) | join(',') }}"
+    configure_priv: "{{ item.configure_priv | default('^$') }}"
+    read_priv: "{{ item.read_priv | default('^$') }}"
+    write_priv: "{{ item.write_priv | default('^$') }}"
+    node: "{{ item.node | default('rabbit') }}"
+    state: "{{ item.state | default('present') }}"
+    force: "{{ item.force | default('no') }}"
+  with_items: rabbitmq_users
+
+- name: Manage RabbitMQ policies
+  rabbitmq_policy:
+    name: "{{ item.name }}"
+    node: "{{ item.node | default('rabbit') }}"
+    pattern: "{{ item.pattern | default('^$') }}"
+    priority: "{{ item.priority | default(1) }}"
+    state: "{{ item.tags | default('present') }}"
+    tags: "{{ item.tags | default('') }}"
+    vhost: "{{ item.vhost | default('/') }}"
+  with_items: rabbitmq_policies
+
+- name: Manage RabbitMQ plugins
+  rabbitmq_plugin:
+    names: "{{ item.names | join(',') }}"
+    new_only: "{{ item.new_only | default('no') }}"
+    prefix: "{{ item.prefix | default('') }}"
+    state: "{{ item.state | default('enabled') }}"
+  with_items: rabbitmq_plugins
+  notify:
+    - Restart rabbitmq-server
+
+- name: Manage RabbitMQ parameters
+  rabbitmq_parameter:
+    name: "{{ item.name }}"
+    component: "{{ item.component }}"
+    value: "{{ item.value | default('') }}"
+    node: "{{ item.node | default('rabbit') }}"
+    vhost: "{{ item.vhost | default('/') }}"
+    state: "{{ item.state | default('present') }}"
+  with_items: rabbitmq_parameters

@@ -1,0 +1,23 @@
+---
+
+galaxy_info:
+  author: Jiri Tyr
+  description: A role that installs Redis
+  license: MIT
+  min_ansible_version: 1.8
+  platforms:
+    - name: EL
+      versions:
+        - 6
+  categories:
+    - database:nosql
+dependencies: 
+  - role: common/yumrepo
+    yumrepo_repos:
+      epel:
+        name: centos-epel
+        baseurl: Extra Packages for Enterprise Linux 6 - $basearch
+        mirrorlist: 'https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=$basearch'
+        failovermethod: priority
+        gpgcheck: 1
+        gpgkey: 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6'

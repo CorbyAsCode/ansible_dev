@@ -1,0 +1,15 @@
+[sensu-server]
+sensu-server-1.domain
+
+[sensu-clients]
+webserver-1.domain
+dbserver-1.domain
+
+[kvm]
+kvm-master.domain
+
+[webservers]
+webserver-1.domain
+
+[dbservers]
+dbserver-1.domain
