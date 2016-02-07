@@ -12,24 +12,34 @@
 - name: Configure additional repos in /etc/yum.repos.d/
   template:
     src: yum_repo.j2
-    dest: /etc/yum.repos.d/{{ item.key }}.repo
+    dest: /etc/yum.repos.d/{{ item.local_install.key }}.repo
   register: repo_file
   with_dict: yumrepo_repos
-  when: yumrepo_repos.keys() | length > 0
+  when: > 
+    yumrepo_repos.keys() | length > 0 and
+    item.local_install is defined
   notify:
     - Delete unmanaged repos
 
 - name: Import GPG key if specified
   rpm_key:
     state: present
-    key: "{{ item.value.gpgkey |
+    key: "{{ item.local_install.gpgkey |
       replace('$releasever', ansible_distribution_major_version) |
       replace('$arch', ansible_architecture) |
       replace('$basearch', ansible_architecture) }}"
   with_dict: yumrepo_repos
   when: >
     item.value.gpgkey is defined and
-    item.value.gpgcheck == 1
+    item.value.gpgcheck == 1 and
+    item.local_install is defined
+
+- name: Install repo using RPM
+  yum:
+    name: "{{ item.yum.name }}"
+  with_dict: yumrepo_repos
+  when: >
+    item.yum is defined
 
 - name: Create temporal directory
   file:
