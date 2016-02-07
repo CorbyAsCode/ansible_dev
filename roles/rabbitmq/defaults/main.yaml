@@ -1,8 +1,8 @@
 ---
 
 # Package to install (you can force certain version here)
-rabbitmq_pkg: rabbitmq-server
-
+#rabbitmq_pkg: rabbitmq-server
+rabbitmq_pkg: 'http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.0/rabbitmq-server-3.6.0-1.noarch.rpm'
 # Default RabbitMQ config
 rabbitmq_config:
   - rabbit:
