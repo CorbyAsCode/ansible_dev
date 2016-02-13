@@ -1,0 +1,31 @@
+---
+# Use this key/value scheme in roles/common/yumrepo/tasks/main.yaml
+- hosts: webserver-1.domain
+  remote_user: corby
+  vars:
+    yumrepo_repos:
+      local_install:
+        erlang:
+          name: erlang-solutions
+          baseurl: 'http://packages.erlang-solutions.com/rpm/centos/$releasever/$basearch'
+          gpgcheck: 0
+          gpgkey: 'http://packages.erlang-solutions.com/debian/erlang_solutions.asc'
+        yourlang:
+          name: your lang
+          baseurl: 'http://your-lang.org'
+          gpgcheck: 0
+
+      yum:
+        erlang2:
+          name: erlang2-solutions
+        mylang:
+          name: mylang
+
+  tasks:
+    - name: Print yum repo local_install info
+      debug: msg="Repo = {{ item.key }}, Repo name = {{ item.value.name }}"
+      with_dict: "{{ yumrepo_repos.local_install }}"
+  
+    - name: Print yum install info
+      debug: msg="Repo = {{ item.key }}, Repo name = {{ item.value.name }}"
+      with_dict: "{{ yumrepo_repos.yum }}"
