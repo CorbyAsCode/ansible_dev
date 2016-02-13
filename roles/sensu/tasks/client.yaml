@@ -18,6 +18,25 @@
   tags:
     - sensu_config
 
+- name: Ensure ownership/permissions on log dir
+  file:
+    path: /var/log/sensu
+    group: sensu
+    owner: sensu
+    mode: 0755
+    recurse: yes
+    state: directory
+
+- name: Ensure ownership/permissions on pid dir
+  file:
+    path: /var/run/sensu
+    group: root
+    owner: sensu
+    mode: 0755
+    recurse: yes
+    state: directory
+
+
 - name: Make sure sensu-client is enabled
   service:
     name: sensu-client
