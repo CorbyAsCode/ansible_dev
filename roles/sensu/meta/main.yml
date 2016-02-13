@@ -17,7 +17,11 @@ allow_duplicates: yes
 dependencies:
   - role: common/yumrepo
     yumrepo_repos:
-      sensu:
-        name: sensu-main
-        baseurl: "{{ sensu_yum_repo_url }}"
-        gpgcheck: 0
+      local_install:
+        sensu:
+          name: sensu-main
+          baseurl: "{{ sensu_yum_repo_url }}"
+          gpgcheck: 0
+
+  - role: rabbitmq
+  - role: redis
