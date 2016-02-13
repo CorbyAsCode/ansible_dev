@@ -52,3 +52,6 @@
   tags:
     - sensu_pkg
     - sensu_config
+
+- include: checks.yaml
+  when: sensu_manage_checks
