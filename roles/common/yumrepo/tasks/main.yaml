@@ -12,34 +12,33 @@
 - name: Configure additional repos in /etc/yum.repos.d/
   template:
     src: yum_repo.j2
-    dest: /etc/yum.repos.d/{{ item.local_install.key }}.repo
+    dest: /etc/yum.repos.d/{{ item.key }}.repo
   register: repo_file
-  with_dict: yumrepo_repos
+  with_dict: "{{ yumrepo_repos.local_install|default({}) }}"
   when: > 
-    yumrepo_repos.keys() | length > 0 and
-    item.local_install is defined
+    'local_install' in yumrepo_repos.keys()
   notify:
     - Delete unmanaged repos
 
 - name: Import GPG key if specified
   rpm_key:
     state: present
-    key: "{{ item.local_install.gpgkey |
+    key: "{{ item.value.gpgkey |
       replace('$releasever', ansible_distribution_major_version) |
       replace('$arch', ansible_architecture) |
       replace('$basearch', ansible_architecture) }}"
-  with_dict: yumrepo_repos
+  with_dict: "{{ yumrepo_repos.local_install|default({}) }}"
   when: >
     item.value.gpgkey is defined and
     item.value.gpgcheck == 1 and
-    item.local_install is defined
+    'local_install' in yumrepo_repos.keys()
 
 - name: Install repo using RPM
   yum:
-    name: "{{ item.yum.name }}"
-  with_dict: yumrepo_repos
+    name: "{{ item.value.name }}"
+  with_dict: "{{ yumrepo_repos.yum_install|default({}) }}"
   when: >
-    item.yum is defined
+    'yum_install' in yumrepo_repos.keys()
 
 - name: Create temporal directory
   file:
@@ -120,6 +119,8 @@
     yumrepo_finish
 
 - name: Clean yum cache
-  shell: yum clean all
+  #shell: yum clean all
+  yum:
+    update_cache: yes
   changed_when: False
   when: repo_file and repo_file.changed
