@@ -17,5 +17,5 @@
 - include: client.yaml
   when: sensu_install_client
 
-- include: checks.yaml
-  when: sensu_manage_checks
+#- include: checks.yaml
+  #when: sensu_manage_checks
