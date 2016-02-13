@@ -4,8 +4,6 @@
   remote_user: corby
   become: true
   become_method: su
-  #vars:
-    #rabbitmq_pkg: 'http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.0/rabbitmq-server-3.6.0-1.noarch.rpm'
   roles:
     - rabbitmq
     - redis
@@ -18,7 +16,6 @@
   become: true
   become_method: su
   vars:
-    #rabbitmq_pkg: 'http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.0/rabbitmq-server-3.6.0-1.noarch.rpm'
     server__sensu: sensu-server
   roles:
     - rabbitmq
