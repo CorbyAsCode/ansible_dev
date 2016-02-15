@@ -1,0 +1,10 @@
+---
+
+- name: Manage Sensu client checks
+  template:
+    src: check.json.j2
+    dest: /etc/sensu/conf.d/checks.json
+  notify:
+    - Restart sensu-client
+  tags:
+    - sensu_checks

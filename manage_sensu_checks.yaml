@@ -1,0 +1,19 @@
+---
+
+- hosts: sensu-clients
+  remote_user: corby
+  become: true
+  become_method: su
+  vars:
+    sensu_manage_checks: true
+    sensu_checks:
+      checks:
+        cron:
+          command: check-process.rb -p cron
+          subscribers:
+            - production
+          interval: 60
+  roles:
+    - role: sensu_checks
+      vars: 
+        sensu_checks: {} 
