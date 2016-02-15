@@ -1,3 +1,9 @@
 ---
 
+sensu_checks_dir: /opt/sensu/embedded/bin
+sensu_check_config_dir: /etc/sensu/conf.d
+sensu_manage_checks: false
+
+sensu_checks: {}
+
 
