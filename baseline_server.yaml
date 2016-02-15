@@ -1,0 +1,51 @@
+---
+
+- hosts: all
+  serial: 1
+  remote_user: root
+  tasks:
+    #- name: Turn selinux off
+      #command: /usr/sbin/setenforce 0
+
+    - name: Edit resolv.conf
+      copy:
+        dest: /etc/resolv.conf
+        src: /Users/corbyshaner/Desktop/ansible_dev/resolv.conf
+
+    - name: Install selinux dependency
+      yum:
+        name: libselinux-python
+
+    - name: Disable selinux
+      selinux:
+        state: disabled 
+    
+    - name: Install EPEL repo
+      yum:
+        name: epel-release
+    - name: Update system
+      yum:
+        name: '*'
+        state: latest
+    - name: Install vim
+      yum: 
+        name: vim
+    - name: Install wget
+      yum:
+        name: curl
+    - name: Install curl
+      yum:
+        name: wget
+    - name: Install acpid
+      yum:
+        name: acpid
+    - name: Install bind-utils
+      yum:
+        name: bind-utils
+    - name: Install netcat
+      yum:
+        name: nc
+
+    - name: Set hostname
+      hostname:
+        name: '{{ inventory_hostname }}'
