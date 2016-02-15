@@ -1,0 +1,7 @@
+---
+
+- name: Restart sensu-client
+  service:
+    name: sensu-client
+    state: restarted
+  when: not sensu_service_client_started.changed
