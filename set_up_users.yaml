@@ -3,6 +3,7 @@
 - hosts: all
   remote_user: root
   tasks:
+
     - name: Create groups
       group:
         name: admins
@@ -15,9 +16,13 @@
         home: /home/corby 
         group: admins
     
-    - name: Set up authorized keys
+    - name: Set up my authorized keys
       authorized_key:
         user: corby
         key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC01qH8qoAYFNVRwcWkt7+kE8aw7QuUlQmyyjSN6ZplK72B6b5CwOdi0aQzYvlVRJnc1ck/jmhWaKfvl3sCeWnBjhJSbN+ZYj/9AHju8bem8hn9n+s6br0uYDRUNzunfnLAf+qLEmo+cqLAnseKKVZcHMhASMoUwAC7w/Dbg/8y8ZUpDPDqM7TQwynEA4Ju0BEiv02aF2WPS9Vb6kthfkMBPrjAAlOydbLQztjutFr9efvpbMA27Y6dZzFSxi5TSRb9XOIyllTmu/+OIhx0NJWgBiu0l+e6h8RwxErp6MZ+vMU5IwwLqwL3/5DkvUPST/iqXnVEVc6uLdZzvQ2OaswPkZ/s/Z6D35Jez+jiWjhDtzqYiijw9Hze+GoFoWH1x9IMO+PbnzGV9RPtd0wzHjUIvl7qulCKqM5azkvTyNWiLCiUwnGn+hBgI48h3Jy+NS5RgDhnIQhCUh4/RXh3r7ImIA5VEt7jjo2C7VOl4YDsUeEpluiWt5cMS3WNThwwAWo01SpG9qt2NElAZlNMxx5SzdpfPWxp+kq5ziq3a28JOw/GuMZWwvIwULSs8c4qq6yGgkuWoV7BdXFWmmXC6+9tZz3SGBqCWqKtMiK1OicxAcMW7ZT9w9rFH836JdfXgD7o6bkaRAGFwOnKhm48e20Ku1co5utDc4sCXNTOnrd4FQ== corbyshaner@gmail.com
+    
+    - name: Set up root authorized keys
+      authorized_key:
         user: root
         key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC01qH8qoAYFNVRwcWkt7+kE8aw7QuUlQmyyjSN6ZplK72B6b5CwOdi0aQzYvlVRJnc1ck/jmhWaKfvl3sCeWnBjhJSbN+ZYj/9AHju8bem8hn9n+s6br0uYDRUNzunfnLAf+qLEmo+cqLAnseKKVZcHMhASMoUwAC7w/Dbg/8y8ZUpDPDqM7TQwynEA4Ju0BEiv02aF2WPS9Vb6kthfkMBPrjAAlOydbLQztjutFr9efvpbMA27Y6dZzFSxi5TSRb9XOIyllTmu/+OIhx0NJWgBiu0l+e6h8RwxErp6MZ+vMU5IwwLqwL3/5DkvUPST/iqXnVEVc6uLdZzvQ2OaswPkZ/s/Z6D35Jez+jiWjhDtzqYiijw9Hze+GoFoWH1x9IMO+PbnzGV9RPtd0wzHjUIvl7qulCKqM5azkvTyNWiLCiUwnGn+hBgI48h3Jy+NS5RgDhnIQhCUh4/RXh3r7ImIA5VEt7jjo2C7VOl4YDsUeEpluiWt5cMS3WNThwwAWo01SpG9qt2NElAZlNMxx5SzdpfPWxp+kq5ziq3a28JOw/GuMZWwvIwULSs8c4qq6yGgkuWoV7BdXFWmmXC6+9tZz3SGBqCWqKtMiK1OicxAcMW7ZT9w9rFH836JdfXgD7o6bkaRAGFwOnKhm48e20Ku1co5utDc4sCXNTOnrd4FQ== corbyshaner@gmail.com
+
