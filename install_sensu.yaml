@@ -1,0 +1,26 @@
+---
+
+- hosts: sensu-server 
+  remote_user: corby
+  become: true
+  become_method: su
+  roles:
+    - rabbitmq
+    - redis
+    - role: sensu
+      sensu_install_server: true
+      sensu_install_api: true
+
+- hosts: sensu-clients
+  remote_user: corby
+  become: true
+  become_method: su
+  vars:
+    server__sensu: sensu-server
+  roles:
+    - rabbitmq
+    - role: sensu
+      vars: 
+        sensu_api_host: "{{ server__sensu }}"
+        sensu_rabbitmq_host: "{{ server__sensu }}"
+        sensu_redis_host: "{{ server__sensu }}"
