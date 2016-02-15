@@ -4,6 +4,7 @@ sensu-server-1.domain
 [sensu-clients]
 webserver-1.domain
 dbserver-1.domain
+#elk-1.domain
 
 [kvm]
 kvm-master.domain
@@ -13,3 +14,6 @@ webserver-1.domain
 
 [dbservers]
 dbserver-1.domain
+
+[elk]
+elk-1.domain
