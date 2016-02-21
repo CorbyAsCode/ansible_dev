@@ -1,5 +1,42 @@
 ---
 
+- name: Create /etc/ansible dir
+  file:
+    path: /etc/ansible
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create /etc/ansible/facts.d dir
+  file:
+    path: /etc/ansible/facts.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install sensu plugin fact
+  copy:
+    src: files/sensu_installed_plugins.fact
+    dest: /etc/ansible/facts.d/sensu_installed_plugins.fact
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Get facts from plugin
+  setup: filter=ansible_local
+
+- name: Install sensu plugins from Internet
+  get_url:
+    url: "{{ item.value.url }}"
+    dest: "{{ item.value.dest|default(sensu_checks_dir) }}"
+    force: "{{ item.value.force|default('no') }}"
+  with_dict: "{{ sensu_plugins.get_url|default({}) }}"
+  when: "{{ item.key not in ansible_local.sensu_installed_plugins }}"
+  notify:
+    - Restart sensu-client
+
 - name: Manage Sensu client checks
   template:
     src: check.json.j2
@@ -7,5 +44,6 @@
   when: sensu_manage_checks
   notify:
     - Restart sensu-client
+  register: sensu_client_restart
   tags:
     - sensu_checks
