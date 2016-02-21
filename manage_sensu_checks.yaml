@@ -13,6 +13,10 @@
           subscribers:
             - production
           interval: 60
+    sensu_plugins:
+      get_url:
+        'check-dir-size.rb':
+          url: 'https://github.com/sensu-plugins/sensu-plugins-filesystem-checks/blob/master/bin/check-dir-size.rb'
   roles:
     - role: sensu_checks
       vars: 
