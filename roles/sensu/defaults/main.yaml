@@ -70,3 +70,4 @@ sensu_client_rabbitmq_config:
     user: "{{ sensu_rabbitmq_user }}"
     password: "{{ sensu_rabbitmq_password }}"
     vhost: "{{ sensu_rabbitmq_vhost }}"
+
