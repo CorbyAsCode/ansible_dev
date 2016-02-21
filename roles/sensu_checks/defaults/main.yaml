@@ -6,4 +6,3 @@ sensu_manage_checks: false
 
 sensu_checks: {}
 
-
