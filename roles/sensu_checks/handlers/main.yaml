@@ -4,4 +4,4 @@
   service:
     name: sensu-client
     state: restarted
-  when: not sensu_service_client_started.changed
+  when: not sensu_client_restart.changed
